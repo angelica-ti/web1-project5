@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livraria</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <header>Minha Leitura</header>
+    <div class="search-container">
+        <input id="search" type="text" placeholder="Título do livro" name="search">
+        <button type="button"><i class="fa fa-search" onclick="searchBooks()"></i></button>
+    </div>
+    <div class="buttons">
+        <button id="addBook" class="addButton" onclick="openAddScreen()">Adicionar Livro</button>
+        <button id="collectionButton" class="addButton" onclick="showAll()">Acervo</button>
+        <button id="removeAllBooks" class="addButton" onclick="removeAll()">Remover todos</button>
+    </div>
+    <div class="form-popup" id="myForm">
+        <form class="form-container">
+            <h1>Adicionar Livro</h1>
+            <hr>
+            <label for="titleBook"><b>Título:</b></label>
+            <input type="text" id="titleBook" placeholder="Entre com o Título do Livro" name="titleBook" required>
+            <label for="author"><b>Autor:</b></label>
+            <input type="text" id="author" placeholder="Entre com o Nome do Autor" name="author" required>
+            <label for="status"><b>Status de Leitura:</b></label>
+            <select name="status" id="status">
+                <option value="Lido">Lido</option>
+                <option value="Não lido" selected>Não lido</option>
+            </select>
+            <button type="button" id="bttCreateBook" class="btn" onclick="addBooks();closeForm();">Adicionar</button>
+        </form>
+    </div>
+    <table id="myTable">
+        <tr>
+            <th>#</th>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Status</th>
+            <th>Excluir</th>
+        </tr>
+    </table>
+    <script src="js/script.js"></script>
+</body>
+</html>
