@@ -1,5 +1,16 @@
-var all_books = new Array();
-var id = 0;
+//Get all keys different of id and sort
+keys = Object.keys(localStorage).filter(function(e) { return e !== 'id' }).sort();
+
+//Presents all stored books
+for(w=0;w<keys.length;w++){
+    id = keys[w];
+    showBooks(w);
+}
+
+var id = parseInt(localStorage.getItem('id'))+1;
+if(!localStorage.getItem('id')){
+    id = 0;
+}
 
 function openAddScreen() {
     document.getElementById("myForm").style.display = "block";
@@ -18,9 +29,11 @@ function showBooks(i){
     var cell3 = row.insertCell(2);
     var cell4 = row.insertCell(3);
     var cell5 = row.insertCell(4);
-    cell1.innerHTML = all_books[i].id;
-    cell2.innerHTML = all_books[i].title;
-    cell3.innerHTML = all_books[i].author;
+    var book_json = JSON.parse(localStorage.getItem(id.toString()));
+    console.log(book_json);
+    cell1.innerHTML = book_json.id;
+    cell2.innerHTML = book_json.title;
+    cell3.innerHTML = book_json.author;
 
     var array = ["Lido","Não lido"];
 
@@ -33,18 +46,27 @@ function showBooks(i){
         var option = document.createElement("option");
         option.value = array[j];
         option.text = array[j];
-        if(all_books[i].status == array[j]){
+        if(book_json.status == option.value){
             option.selected = true;
+            if(!j){
+                cell2.className = "line";
+            }
         }
         selectList.appendChild(option);
     }
     selectList.addEventListener("change", function() {
         if(this.value == "Lido")
         {   
-            this.parentElement.parentElement.cells[1].style.textDecoration = "line-through"; 
+            this.parentElement.parentElement.cells[1].className = "line"; 
+            book_json.status = this.value;
+            localStorage.removeItem(book_json.id.toString());
+            localStorage.setItem(book_json.id.toString(),JSON.stringify(book_json));
         }
         else{
-            this.parentElement.parentElement.cells[1].style.textDecoration = "none";
+            this.parentElement.parentElement.cells[1].className = "without-line";
+            book_json.status = this.value;
+            localStorage.removeItem(book_json.id.toString());
+            localStorage.setItem(book_json.id.toString(),JSON.stringify(book_json));
         }
     });
     cell4.appendChild(selectList);
@@ -59,9 +81,11 @@ function showBooks(i){
 
     btn.addEventListener('click', function(){
         var books = document.querySelector('table').rows;
-        for(var k=0;k<books.length;k++){
+        for(var k=1;k<books.length;k++){
+            console.log(books[k].id);
             if(books[k].id == this.parentElement.parentElement.id){
-                all_books=all_books.slice(0,k-1).concat(all_books.slice(k,all_books.length));
+                keys=keys.slice(0,k-1).concat(keys.slice(k,keys.length));
+                localStorage.removeItem(books[k].id.toString());
                 books[k].remove();
                 break;
             }
@@ -90,8 +114,10 @@ function addBooks(){
         author: author,
         status: status
     };
-    all_books.push(book);
-    showBooks(all_books.length-1);
+    localStorage.setItem('id',id);
+    localStorage.setItem(id.toString(),JSON.stringify(book));
+    keys.push(id);
+    showBooks(keys.length-1);
     id+=1;
     
 }
@@ -100,7 +126,8 @@ function searchBooks(){
     var books = document.querySelector('table').rows;
     const titleBook = document.getElementById('search').value;
     for(var i=1;i<books.length;i++){
-        if(all_books[i-1].title != titleBook){
+        title = books[i].cells[1].innerHTML;
+        if(title != titleBook){
             books[i].style.display="none";
         }
         else{
@@ -120,10 +147,14 @@ function showAll(){
 }
 
 function removeAll(){
-    for(var i=0;i<all_books.length;i++){
-        var book = document.getElementById(all_books[i].id);
+    for(var i=0;i<keys.length;i++){
+        var book = document.getElementById(keys[i]);
+        console.log(book);
         book.remove();
     }
-    all_books = [];
+    keys = [];
+    localStorage.clear();
+    localStorage.setItem('id',0);
+    id = 0;
 
 }
